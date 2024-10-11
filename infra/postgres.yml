@@ -1,0 +1,13 @@
+version: '3'
+services:
+  db:
+    image: postgres:11.2
+    container_name: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: bigbase
+      POSTGRES_PASSWORD: anrnd712
+    volumes:
+      - "../load_data/postgres:/scripts"

@@ -1,0 +1,1 @@
+CREATE TABLE head (name VARCHAR, born_state VARCHAR, age VARCHAR)
