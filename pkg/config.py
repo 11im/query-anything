@@ -21,3 +21,9 @@ def getArg():
     path = parser.add_argument_group('Path','Configure File Path')
     path.add_argument('--config',required=False, default= "./config/config.ini",type=str,help='Config File Path, Defalut: ./config/config.ini')
     return parser.parse_args().config
+
+def get_API_keys(path:str="./claude.key"):
+    with open(path) as f:
+        key = f.read()
+        f.close()
+    return key
