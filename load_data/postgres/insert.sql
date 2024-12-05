@@ -1,0 +1,9 @@
+INSERT INTO public.head (age, name, born_state) VALUES ('20', 'YH LEE', 'NY');
+INSERT INTO public.head (age, name, born_state) VALUES ('29', 'YG KIM', 'LA');
+INSERT INTO public.head (age, name, born_state) VALUES ('32', 'HW KANG', 'SF');
+INSERT INTO public.head (age, name, born_state) VALUES ('31', 'TH KIM', 'HW');
+INSERT INTO public.head (age, name, born_state) VALUES ('44', 'UH AN', 'NY');
+INSERT INTO public.head (age, name, born_state) VALUES ('42', 'YH YOON', 'HW');
+INSERT INTO public.head (age, name, born_state) VALUES ('47', 'AD PARK', 'LA');
+INSERT INTO public.head (age, name, born_state) VALUES ('51', 'TK PARK', 'LA');
+INSERT INTO public.head (age, name, born_state) VALUES ('27', 'EJ LEE', 'SF');
