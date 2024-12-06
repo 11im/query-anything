@@ -47,7 +47,6 @@ class PSQL:
                 {
                     "name": col[0],
                     "type": col[1],
-                    "max_length": col[2],
                     "nullable": col[3]
                 } for col in columns
             ]
@@ -57,12 +56,37 @@ class PSQL:
         return res
     # Get Foreign Keys
     def get_foregin_keys(self):
-        return """ALTER TABLE Units ADD CONSTRAINT fk_units FOREIGN KEY(Commander) REFERENCES SoldierInformation(ID);
-                    ALTER TABLE PersonalInformation ADD CONSTRAINT fk_pi1 FOREIGN KEY(JobName) REFERENCES JobCategory(Name);
-                    ALTER TABLE PersonalInformation ADD CONSTRAINT fk_pi2 FOREIGN KEY(Certificate) REFERENCES Certificate(ID);
-
-                    ALTER TABLE SoldierInformation ADD CONSTRAINT fk_si1 FOREIGN KEY(Specialty) REFERENCES Specialty(ID);
-                    ALTER TABLE SoldierInformation ADD CONSTRAINT fk_si2 FOREIGN KEY(Affiliation) REFERENCES Units(ID);"""
+        cur = self.con.cursor()
+        cur.execute("""SELECT
+                        tc.constraint_name,
+                        tc.table_name AS child_table,
+                        kcu.column_name AS child_column,
+                        ccu.table_name AS parent_table,
+                        ccu.column_name AS parent_column
+                    FROM
+                        information_schema.table_constraints AS tc
+                    JOIN
+                        information_schema.key_column_usage AS kcu
+                    ON tc.constraint_name = kcu.constraint_name
+                    AND tc.table_schema = kcu.table_schema
+                    JOIN
+                        information_schema.constraint_column_usage AS ccu
+                    ON ccu.constraint_name = tc.constraint_name
+                    AND ccu.table_schema = tc.table_schema
+                    WHERE
+                        tc.constraint_type = 'FOREIGN KEY'""")
+        fks = cur.fetchall()
+        fk_schema = {}
+        for fk in fks:
+            fk_schema[fk[0]] = {
+                "child_table": fk[1],
+                "child_column": fk[2],
+                "parent_table": fk[3],
+                "parent_column": fk[4]
+                }
+        res = json.dumps(fk_schema)
+        cur.close()
+        return res
     
     # Get user defined types
     def get_db_types(self):
@@ -116,13 +140,13 @@ class PSQL:
             case "specialty":
                 cur.execute(f"""INSERT INTO {table}
                             ( id, classname, classcode, specialtyname ) values 
-                            ('{data[0]}','{data[1]}',{data[2]},'{data[3]}') ON CONFLICT(id) DO NOTHING""".replace('\n',''))
+                            ('{data[0]}','{data[1]}',{data[2]},'{data[3]}')""".replace('\n',''))
             case "units":
                 cur.execute(f"""INSERT INTO {table} 
                             ( id, commander, subordinateunit, organization, num, name ) values 
-                            ('{data[0]}','{data[1]}',array{data[2]},'{data[3]}',{data[4]},'{data[4]}') ON CONFLICT(id) DO NOTHING""".replace('\n',''))
+                            ('{data[0]}','{data[1]}',array{data[2]},'{data[3]}',{data[4]},'{data[5]}') ON CONFLICT(id) DO NOTHING""".replace('\n',''))
         self.con.commit()
         cur.close()
-        
+    
     def close(self):
             self.con.close()
