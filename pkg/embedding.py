@@ -138,9 +138,9 @@ def search_keywords(vector_store, query: str, k: int = 5):
     """
     results = vector_store.similarity_search_with_score(query, k=k)
     
-    print(f"\nSearch results for '{query}':")
-    for doc, score in results:
-        similarity = 1 - score  # Convert distance to similarity
-        print(f"- {doc.page_content} (similarity: {similarity:.3f})")
+    # print(f"\nSearch results for '{query}':")
+    # for doc, score in results:
+    #     similarity = 1 - score  # Convert distance to similarity
+    #     print(f"- {doc.page_content} (similarity: {similarity:.3f})")
     
     return results
